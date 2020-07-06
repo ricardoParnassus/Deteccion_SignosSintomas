@@ -16,6 +16,7 @@ using formularioDeteccionSignos_Form.resources.camera.Respuesta;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Globalization;
+using System.Drawing.Imaging;
 
 namespace formularioDeteccionSignos_Form
 {
@@ -284,10 +285,31 @@ namespace formularioDeteccionSignos_Form
             }
         }
 
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        /* CAPTURA DE PANTALLA - JN */
+        private void CapturaSS(String rutaGuardar)
         {
-            catalogoParametrizacion ctlg_parametrizacion = new catalogoParametrizacion();
-            ctlg_parametrizacion.Show();
+            string aux = @"C:\Users\Phrankie Garcia\Documents\ArchivoPrueba\capturasPantalla";
+            try
+            {
+                Screen screen = Screen.AllScreens[0]; /// Screen.PrimaryScreen;
+                /// Tamaño de la imagen
+                int Width = screen.Bounds.Width;
+                int Height = screen.Bounds.Height;
+                System.Drawing.Rectangle captureRectangle = screen.Bounds;
+                Bitmap captureBitmap = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                /// Capturando
+                Graphics captureGraphics = Graphics.FromImage(captureBitmap);
+                int dedondeX = captureRectangle.Left;
+                int dedondeY = captureRectangle.Top;
+                int hastadondeX = 0;
+                int hastadondeY = 0;
+                captureGraphics.CopyFromScreen(dedondeX, dedondeY, hastadondeX, hastadondeY, captureRectangle.Size);
+                captureBitmap.Save((string.IsNullOrEmpty(rutaGuardar) || string.IsNullOrWhiteSpace(rutaGuardar)) ? aux : rutaGuardar, ImageFormat.Jpeg);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
