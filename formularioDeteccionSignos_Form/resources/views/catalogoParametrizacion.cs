@@ -26,5 +26,10 @@ namespace formularioDeteccionSignos_Form.resources.views
             tt.SetToolTip(this.txt_temperatura, "Ingrese aquí la temperatura máxima fijada");
             //tt.Show("Ingrese aquí la temperatura máxima fijada", this.txt_temperatura, 0, 0, VisibleTime);
         }
+
+        private void btn_guardar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
