@@ -121,10 +121,13 @@
   <data name="pause-button" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\pause-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icons8-herramientas-del-administrador-48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\icons8-herramientas-del-administrador-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="video" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\video.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icons8-herramientas-del-administrador-48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\images\icons8-herramientas-del-administrador-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Camera_Moto_30013" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\Camera_Moto_30013.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

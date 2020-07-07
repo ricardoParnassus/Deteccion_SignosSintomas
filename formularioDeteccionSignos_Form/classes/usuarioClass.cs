@@ -79,9 +79,7 @@ namespace formularioDeteccionSignos_Form.classes
         public Image fnRecuperaFotoBDDUsuario(string id)
         {
             conexionBD cnn = new conexionBD();
-            
             Image imagen_usuario = cnn.ObtenerBitmapBDD(Int32.Parse(id));
-
             return imagen_usuario;
         }
     }

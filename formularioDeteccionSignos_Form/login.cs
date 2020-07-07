@@ -14,8 +14,8 @@ namespace formularioDeteccionSignos_Form.resources.views
 {
     public partial class login : MaterialForm
     {
-        string usuario = string.Empty;
-        string contrasenia = string.Empty;
+        public string usuario = string.Empty;
+        public string contrasenia = string.Empty;
         public string id_usuario = string.Empty;
         public login()
         {

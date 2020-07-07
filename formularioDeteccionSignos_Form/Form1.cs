@@ -11,17 +11,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using formularioDeteccionSignos_Form.classes;
 using formularioDeteccionSignos_Form.resources.camera.Respuesta;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Globalization;
 using System.Drawing.Imaging;
+using Luxand;
+using System.Runtime.InteropServices;
 
 namespace formularioDeteccionSignos_Form
 {
     public partial class Form1 : MaterialForm
     {
+        #region VARIABLES GLOBALES
+        //VARIABLES GLOBALES
+        String cameraName;
+        bool needClose = false;
+        // WinAPI procedure to release HBITMAP handles returned by FSDKCam.GrabFrame
+        [DllImport("gdi32.dll")]
+        static extern bool DeleteObject(IntPtr hObject);
         List<ORealPlay> _Devices;
         ORespuesta _Respuesta;
         OWebcam _Webcam;
@@ -33,6 +41,9 @@ namespace formularioDeteccionSignos_Form
         FilterInfoCollection _FilterInfoCollection;
         public string id_entrevistador = string.Empty;
         string id_filtro = string.Empty;
+        #endregion
+
+        //CONSTRUCTOR
         public Form1()
         {
             InitializeComponent();
@@ -41,11 +52,29 @@ namespace formularioDeteccionSignos_Form
         private void Form1_Load(object sender, EventArgs e)
         {
             //se carga el formulario winform
+            //conexionBD cnn = new conexionBD();
+            //cnn.fnInsertaIMagenBDD(1, @"C:\Users\Phrankie Garcia\Documents\ArchivoPrueba\descarga_1.jpg");
+            this.Location = new Point(0, 0); //sobra si tienes la posición en el diseño
+            //this.Size = new Size(this.Width, Screen.PrimaryScreen.WorkingArea.Size.Height);
+            //this.WindowState = FormWindowState.Maximized;
             fnInicializaCamaraHikVision();
             fnShowCameraHikVison();
-            fnConectarWebCam();
+            //fnConectarWebCam();
         }
+        
+        public void fncargaFotoUsuario()
+        {
+            try
+            {
+                conexionBD cc = new conexionBD();
+                img_fotoUsuario.Image = cc.ObtenerBitmapBDD(Int32.Parse(id_entrevistador));
+                img_fotoUsuario.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            catch (Exception ex)
+            {
 
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -285,10 +314,9 @@ namespace formularioDeteccionSignos_Form
             }
         }
 
-        /* CAPTURA DE PANTALLA - JN */
         private void CapturaSS(String rutaGuardar)
         {
-            string aux = @"C:\Users\Phrankie Garcia\Documents\ArchivoPrueba\capturasPantalla";
+            string aux = @"C:\Users\Phrankie Garcia\Documents\ArchivoPrueba\capturasPantalla\screenshot_prueba.jpg";
             try
             {
                 Screen screen = Screen.AllScreens[0]; /// Screen.PrimaryScreen;
@@ -316,6 +344,50 @@ namespace formularioDeteccionSignos_Form
         {
             catalogoParametrizacion ctlg_parametrizacion = new catalogoParametrizacion();
             ctlg_parametrizacion.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CapturaSS("");
+            cuadroMensaje msg = new cuadroMensaje();
+            msg.fnCargarMensaje("SE HA REALIZADO LA CAPTURA DE PANTALLA");
+            msg.Show();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            // SE CARGA LA IMAGEN DEL USUARIO DE LA BASE DE DATOS
+            fncargaFotoUsuario();
+
+            visorCamaraLuxand vcl = new visorCamaraLuxand();
+            if (this.panel_webcam.Controls.Count > 0)
+                this.panel_webcam.Controls.RemoveAt(0);
+            Form fh = vcl as Form;
+            fh.TopLevel = false;
+            fh.Dock = DockStyle.Fill;
+            this.panel_webcam.Controls.Add(fh);
+            this.panel_webcam.Tag = fh;
+            fh.Show();
+        }
+
+        private void btn_start_Click(object sender, EventArgs e)
+        {
+            //visorCamaraLuxand vcl = new visorCamaraLuxand();
+            //if (this.panel_webcam.Controls.Count > 0)
+            //    this.panel_webcam.Controls.RemoveAt(0);
+            //Form fh = vcl as Form;
+            //fh.TopLevel = false;
+            //fh.Dock = DockStyle.Fill;
+            //this.panel_webcam.Controls.Add(fh);
+            //this.panel_webcam.Tag = fh;
+            //fh.Show();
+            //visorCamaraLuxand vcl = new visorCamaraLuxand();
+            //vcl.Show();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

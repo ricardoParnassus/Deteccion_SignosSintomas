@@ -107,13 +107,13 @@ namespace formularioDeteccionSignos_Form.classes
                 {
                     cnn.Open();
                     cmd.CommandText = "INSERT INTO tbl_fotoUsuarios VALUES (" +
-                        " @id" +
-                        ", @nombre" +
+                        " @id_user" +
                         ", @imagen" +
+                        ", @descripcion" +
                         ")";
-                    cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
-                    cmd.Parameters.Add("@nombre", SqlDbType.NVarChar).Value = Path.GetFileName(pathFoto);
-                    cmd.Parameters.Add("", SqlDbType.Image).Value = arrImage;
+                    cmd.Parameters.Add("@id_user", SqlDbType.Int).Value = id;
+                    cmd.Parameters.Add("@imagen", SqlDbType.Image).Value = arrImage;
+                    cmd.Parameters.Add("@descripcion", SqlDbType.NVarChar).Value = Path.GetFileName(pathFoto);
 
                     cmd.ExecuteNonQuery();
                     cnn.Close();
