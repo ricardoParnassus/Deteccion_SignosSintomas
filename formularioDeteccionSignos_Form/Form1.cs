@@ -18,6 +18,8 @@ using System.Globalization;
 using System.Drawing.Imaging;
 using Luxand;
 using System.Runtime.InteropServices;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace formularioDeteccionSignos_Form
 {
@@ -41,12 +43,14 @@ namespace formularioDeteccionSignos_Form
         FilterInfoCollection _FilterInfoCollection;
         public string id_entrevistador = string.Empty;
         string id_filtro = string.Empty;
+        object[] user_data;
         #endregion
 
         //CONSTRUCTOR
-        public Form1()
+        public Form1(object[] user_data)
         {
             InitializeComponent();
+            this.user_data = user_data;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -134,10 +138,12 @@ namespace formularioDeteccionSignos_Form
         }
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
-            form2.Show();
+            //visorCamaraLuxand vcl = new visorCamaraLuxand();
+            //vcl.Show();
 
-            fnValidaTemperatura();
+            //Form2 form2 = new Form2();
+            //form2.Show();
+            //fnValidaTemperatura();
         }
 
         public void fnValidaTemperatura()
@@ -359,35 +365,62 @@ namespace formularioDeteccionSignos_Form
             // SE CARGA LA IMAGEN DEL USUARIO DE LA BASE DE DATOS
             fncargaFotoUsuario();
 
-            visorCamaraLuxand vcl = new visorCamaraLuxand();
+            visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
+            //vcl.Show();
+
             if (this.panel_webcam.Controls.Count > 0)
                 this.panel_webcam.Controls.RemoveAt(0);
             Form fh = vcl as Form;
             fh.TopLevel = false;
             fh.Dock = DockStyle.Fill;
+            //Dispatcher.Invoke(((Action) (() => this.panel_webcam.Controls.Add(fh))));
+            //Dispatcher.Invoke(((Action)(() => this.panel_webcam.Tag = fh)));
             this.panel_webcam.Controls.Add(fh);
             this.panel_webcam.Tag = fh;
             fh.Show();
-        }
 
-        private void btn_start_Click(object sender, EventArgs e)
-        {
-            //visorCamaraLuxand vcl = new visorCamaraLuxand();
-            //if (this.panel_webcam.Controls.Count > 0)
-            //    this.panel_webcam.Controls.RemoveAt(0);
-            //Form fh = vcl as Form;
-            //fh.TopLevel = false;
-            //fh.Dock = DockStyle.Fill;
-            //this.panel_webcam.Controls.Add(fh);
-            //this.panel_webcam.Tag = fh;
-            //fh.Show();
-            //visorCamaraLuxand vcl = new visorCamaraLuxand();
-            //vcl.Show();
+            //ThreadStart _delegate = new ThreadStart(hiloEjecucion);
+            //Thread hilo = new Thread(() => hiloEjecucion());
+            //Thread hilo = new Thread(_delegate);
+            //hilo.Start();
         }
-
-        private void button3_Click(object sender, EventArgs e)
+        
+        public void hiloEjecucion()
         {
-            
+            //Dispatcher.Invoke(((Action)(() => txtTrabajo.Text += "")));
+            //Dispatcher.Invoke(((Action)(() => txtTrabajo.Text += "\nIniciando...")));
+            //new Clases.Metodos().Prueba();
+
+            Thread TypingThread = new Thread(delegate () {
+                // Cambiar el estado de los botones dentro del hilo TypingThread
+                // Esto no generará excepciones de nuevo !
+                //if (button1.InvokeRequired)
+                //{
+                //    button1.Invoke(new MethodInvoker(delegate
+                //    {
+                //        button1.Enabled = true;
+                //        button2.Enabled = false;
+                //    }));
+                //}
+                visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
+                if (this.panel_webcam.Controls.Count > 0)
+                    this.panel_webcam.Controls.RemoveAt(0);
+                Form fh = vcl as Form;
+                fh.TopLevel = false;
+                fh.Dock = DockStyle.Fill;
+                //Dispatcher.Invoke(((Action) (() => this.panel_webcam.Controls.Add(fh))));
+                //Dispatcher.Invoke(((Action)(() => this.panel_webcam.Tag = fh)));
+                this.panel_webcam.Controls.Add(fh);
+                this.panel_webcam.Tag = fh;
+                fh.Show();
+
+            });
+
+            // Cambiar el estado de los botones en el hilo principal
+            //button1.Enabled = false;
+            //button2.Enabled = true;
+
+            TypingThread.Start();
         }
     }
 }

@@ -244,7 +244,7 @@
             // 
             this.panel_webcam.Location = new System.Drawing.Point(667, 74);
             this.panel_webcam.Name = "panel_webcam";
-            this.panel_webcam.Size = new System.Drawing.Size(673, 486);
+            this.panel_webcam.Size = new System.Drawing.Size(1008, 638);
             this.panel_webcam.TabIndex = 54;
             // 
             // panel_camaraExt
@@ -293,7 +293,7 @@
             this.materialLabel11.Depth = 0;
             this.materialLabel11.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.materialLabel11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel11.Location = new System.Drawing.Point(904, 563);
+            this.materialLabel11.Location = new System.Drawing.Point(1062, 715);
             this.materialLabel11.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel11.Name = "materialLabel11";
             this.materialLabel11.Size = new System.Drawing.Size(228, 18);
@@ -323,9 +323,9 @@
             // 
             // img_fotoUsuario
             // 
-            this.img_fotoUsuario.Location = new System.Drawing.Point(57, 133);
+            this.img_fotoUsuario.Location = new System.Drawing.Point(62, 133);
             this.img_fotoUsuario.Name = "img_fotoUsuario";
-            this.img_fotoUsuario.Size = new System.Drawing.Size(192, 248);
+            this.img_fotoUsuario.Size = new System.Drawing.Size(187, 248);
             this.img_fotoUsuario.TabIndex = 50;
             this.img_fotoUsuario.TabStop = false;
             // 
@@ -342,7 +342,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1352, 793);
+            this.ClientSize = new System.Drawing.Size(1687, 834);
             this.Controls.Add(this.materialLabel11);
             this.Controls.Add(this.materialLabel10);
             this.Controls.Add(this.button2);

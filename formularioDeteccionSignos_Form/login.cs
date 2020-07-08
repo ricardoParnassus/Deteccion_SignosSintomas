@@ -49,9 +49,16 @@ namespace formularioDeteccionSignos_Form.resources.views
             else
             {
                 usuarioClass busqueda = new usuarioClass();
+                
                 if (busqueda.fnLogeoSistema(this.usuario, this.contrasenia))
                 {
-                    Form1 form1 = new Form1();
+                    DataTable dtbl_user = busqueda.fnSeleccionaUsuarioCorreo(this.usuario);
+                    object[] user_data = new object[1];
+                    foreach (DataRow item in dtbl_user.Rows)
+                    {
+                        user_data = item.ItemArray;
+                    }
+                    Form1 form1 = new Form1(user_data);
                     form1.Show();
                     form1.id_entrevistador = busqueda.id_actual;
                     this.Hide();

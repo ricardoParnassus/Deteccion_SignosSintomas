@@ -33,13 +33,28 @@ namespace formularioDeteccionSignos_Form.classes
                 return dtbl_consulta;
             }
         }
-
         public DataTable fnSeleccionaUsuarioNombre(string match)
         {
             DataTable dtbl_consulta = new DataTable();
             try
             {
                 string str_query = "exec spConsultaEmpleadoNombre " + match;
+                conexionBD consulta = new conexionBD();
+                consulta.fnAbrirConexion();
+                dtbl_consulta = consulta.fnConsultaSentencia(str_query);
+                return dtbl_consulta;
+            }
+            catch (Exception ex)
+            {
+                return dtbl_consulta;
+            }
+        }
+        public DataTable fnSeleccionaUsuarioCorreo(string match)
+        {
+            DataTable dtbl_consulta = new DataTable();
+            try
+            {
+                string str_query = "exec spConsultaUsuarioCorreo '" + match + "'";
                 conexionBD consulta = new conexionBD();
                 consulta.fnAbrirConexion();
                 dtbl_consulta = consulta.fnConsultaSentencia(str_query);
