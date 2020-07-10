@@ -50,7 +50,8 @@
             // materialRaisedButton1
             // 
             this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(189, 185);
+            this.materialRaisedButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.materialRaisedButton1.Location = new System.Drawing.Point(196, 195);
             this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton1.Name = "materialRaisedButton1";
             this.materialRaisedButton1.Primary = true;

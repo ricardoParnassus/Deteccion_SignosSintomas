@@ -136,10 +136,42 @@ namespace formularioDeteccionSignos_Form
 
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
+            //CERRAMOS VENTANA DE CUESTIONARIO DE SIGNOS Y SINTOMAS
+            this.Hide();
+            //SACAMOS UN SCREEN SHOT
+            fnScreenShot("");
+            //CARGAMOS EL COMPROBANTE DEL CUESTIONARIO
             ComprobanteVisor visor = new ComprobanteVisor();
             visor.Show();
+        }
 
-            this.Hide();
+        private void fnScreenShot(String rutaGuardar)
+        {
+            string path_documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string aux = (string.IsNullOrEmpty(rutaGuardar) || string.IsNullOrWhiteSpace(rutaGuardar))
+                            ? path_documents + @"ArchivoPrueba\capturasPantalla\screenshot_prueba.jpg"
+                            : rutaGuardar;
+            try
+            {
+                Screen screen = Screen.AllScreens[0]; /// Screen.PrimaryScreen;
+                                                      /// Tamaño de la imagen
+                int Width = screen.Bounds.Width;
+                int Height = screen.Bounds.Height;
+                System.Drawing.Rectangle captureRectangle = screen.Bounds;
+                Bitmap captureBitmap = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                /// Capturando
+                Graphics captureGraphics = Graphics.FromImage(captureBitmap);
+                int dedondeX = captureRectangle.Left;
+                int dedondeY = captureRectangle.Top;
+                int hastadondeX = 0;
+                int hastadondeY = 0;
+                captureGraphics.CopyFromScreen(dedondeX, dedondeY, hastadondeX, hastadondeY, captureRectangle.Size);
+                captureBitmap.Save((string.IsNullOrEmpty(rutaGuardar) || string.IsNullOrWhiteSpace(rutaGuardar)) ? aux : rutaGuardar, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

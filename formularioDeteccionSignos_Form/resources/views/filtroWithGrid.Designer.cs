@@ -58,11 +58,12 @@
             // dgv_empleados
             // 
             this.dgv_empleados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_empleados.Location = new System.Drawing.Point(59, 132);
+            this.dgv_empleados.Location = new System.Drawing.Point(12, 130);
             this.dgv_empleados.Name = "dgv_empleados";
-            this.dgv_empleados.Size = new System.Drawing.Size(683, 266);
+            this.dgv_empleados.Size = new System.Drawing.Size(776, 308);
             this.dgv_empleados.TabIndex = 2;
             this.dgv_empleados.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_empleados_CellContentClick);
+            this.dgv_empleados.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_empleados_CellContentDoubleClick);
             // 
             // filtroWithGrid
             // 

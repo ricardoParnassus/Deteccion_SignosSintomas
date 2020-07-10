@@ -33,6 +33,7 @@ namespace formularioDeteccionSignos_Form.classes
                 return dtbl_consulta;
             }
         }
+
         public DataTable fnSeleccionaUsuarioNombre(string match)
         {
             DataTable dtbl_consulta = new DataTable();
@@ -49,6 +50,7 @@ namespace formularioDeteccionSignos_Form.classes
                 return dtbl_consulta;
             }
         }
+
         public DataTable fnSeleccionaUsuarioCorreo(string match)
         {
             DataTable dtbl_consulta = new DataTable();
@@ -65,6 +67,7 @@ namespace formularioDeteccionSignos_Form.classes
                 return dtbl_consulta;
             }
         }
+
         public bool fnLogeoSistema(string usuario, string contrasenia)
         {
             DataTable dtbl_consulta = new DataTable();
@@ -91,11 +94,27 @@ namespace formularioDeteccionSignos_Form.classes
                 return false;
             }
         }
+
         public Image fnRecuperaFotoBDDUsuario(string id)
         {
             conexionBD cnn = new conexionBD();
             Image imagen_usuario = cnn.ObtenerBitmapBDD(Int32.Parse(id));
             return imagen_usuario;
+        }
+
+        public bool fnIngresaUsuario(string nombre, string a_paterno, string a_materno, string genero, string edad, string rol, string puesto, string correo, string contrasenia)
+        {
+            try
+            {
+                string str_query = "exec sp_insertaUsuario '" + nombre + "', '" + a_paterno + "', '" + a_materno + "', '" + genero + "', " + edad + ", " + rol + ", " + puesto + ", '" + correo + "', '" + contrasenia + "';";
+                conexionBD consulta = new conexionBD();
+                consulta.fnAbrirConexion();
+                return consulta.fnEjecutarSentencia(str_query);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

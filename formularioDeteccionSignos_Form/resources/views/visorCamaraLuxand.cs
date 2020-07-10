@@ -1,4 +1,5 @@
-﻿using Luxand;
+﻿using formularioDeteccionSignos_Form.classes;
+using Luxand;
 using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace formularioDeteccionSignos_Form.resources.views
 
         String cameraName;
         object[] user_data;
+        string[] registra_usuario;
         bool needClose = false;
         string userName;
         String TrackerMemoryFile = "tracker70.dat";
@@ -313,10 +315,10 @@ namespace formularioDeteccionSignos_Form.resources.views
                     int left = facePosition.xc - (int)(facePosition.w * 0.6);
                     int top = facePosition.yc - (int)(facePosition.w * 0.5);
                     int w = (int)(facePosition.w * 1.2);
-                    //String name = this.nombre + " Edad: " + this.edad + " Puesto: " + this.puesto;
-                    String name;
-                    String nombre;
-                    int res = FSDK.GetAllNames(tracker, IDs[i], out name, 65536); // maximum of 65536 characters
+                    String name = this.nombre + " Edad: " + this.edad + " Puesto: " + this.puesto;
+                    //String name;
+                    //String nombre;
+                    int res = FSDK.GetAllNames(tracker, IDs[i], out nombre, 65536); // maximum of 65536 characters
                     if (FSDK.FSDKE_OK == res && name.Length > 0)
                     { // draw name
                         StringFormat format = new StringFormat();
@@ -338,6 +340,21 @@ namespace formularioDeteccionSignos_Form.resources.views
                                 if (DialogResult.OK == inputName.ShowDialog())
                                 {
                                     userName = inputName.userName;
+                                    /**********************************
+                                     extraemos data del form input name
+                                     **********************************/
+                                    string nombre = inputName.userName;
+                                    string a_paterno = inputName.userPaterno;
+                                    string a_materno = inputName.userMaterno;
+                                    string genero = inputName.userGenero;
+                                    string edad = inputName.userEdad;
+                                    string rol = inputName.userRol;
+                                    string puesto = inputName.userPuesto;
+                                    string correo = inputName.userCorreo;
+                                    /*******************************************
+                                     guardamos los datos en la tabla de usuarios
+                                     *******************************************/
+                                    fnRegistraUsuarioBD(nombre, a_paterno, a_materno, genero, edad, rol, puesto, correo);
                                     if (userName == null || userName.Length <= 0)
                                     {
                                         String s = "";
@@ -358,7 +375,7 @@ namespace formularioDeteccionSignos_Form.resources.views
                 programState = ProgramState.psRecognize;
                 // display current frame
                 pictureBox1.Image = frameImage;
-                GC.Collect(); // collect the garbage after the deletion
+                GC.Collect(); // collect the garbage after the de
             }
             FSDK.SaveTrackerMemoryToFile(tracker, TrackerMemoryFile);
             FSDK.FreeTracker(tracker);
@@ -370,6 +387,22 @@ namespace formularioDeteccionSignos_Form.resources.views
         private void visorCamaraLuxand_FormClosing(object sender, FormClosingEventArgs e)
         {
             needClose = true;
+        }
+
+        private void fnRegistraUsuarioBD(string nombre, string paterno, string materno, string genero, string edad, string rol, string puesto, string correo)
+        {
+            usuarioClass nuevo_usuario = new usuarioClass();
+            cuadroMensaje mensaje = new cuadroMensaje();
+            if (nuevo_usuario.fnIngresaUsuario(nombre, paterno, materno, genero, edad, rol, puesto, correo, "jorbee2020"))
+            {
+                mensaje.fnCargarMensaje("SE AGREGO EL USUARIO");
+                mensaje.Show();
+            }
+            else
+            {
+                mensaje.fnCargarMensaje("ERROR: NO SE AGREGO EL USUARIO");
+                mensaje.Show();
+            }
         }
     }
 }

@@ -137,13 +137,11 @@ namespace formularioDeteccionSignos_Form
             }
         }
         private void materialRaisedButton1_Click(object sender, EventArgs e)
-        {
-            //visorCamaraLuxand vcl = new visorCamaraLuxand();
-            //vcl.Show();
+        {   
+            fnValidaTemperatura();
 
-            //Form2 form2 = new Form2();
-            //form2.Show();
-            //fnValidaTemperatura();
+            Form2 form2 = new Form2();
+            form2.Show();
         }
 
         public void fnValidaTemperatura()
@@ -154,7 +152,7 @@ namespace formularioDeteccionSignos_Form
             if (temp >= aux1)
             {
                 message msg = new message();
-                msg.Show();
+                msg.ShowDialog();
             }
         }
 
@@ -166,8 +164,13 @@ namespace formularioDeteccionSignos_Form
             //FormCollection fc = Application.OpenForms;
             //foreach (Form frm in fc)
             //{
-            //    //if (frm.Name == "filtroWithGrid")
-                    
+            //    //if (frm.Name == "filtroWithGrid") 
+            //}
+
+            //if (DialogResult.OK == filtro.ShowDialog())
+            //{
+            //    id_filtro = filtro.id_recuperado;
+            //    fnFiltroPorEmpleado(id_filtro);
             //}
 
             id_filtro = filtro.id_recuperado;
@@ -320,9 +323,12 @@ namespace formularioDeteccionSignos_Form
             }
         }
 
-        private void CapturaSS(String rutaGuardar)
+        private void fnScreenShot(String rutaGuardar)
         {
-            string aux = @"C:\Users\Phrankie Garcia\Documents\ArchivoPrueba\capturasPantalla\screenshot_prueba.jpg";
+            string path_documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string aux = (string.IsNullOrEmpty(rutaGuardar) || string.IsNullOrWhiteSpace(rutaGuardar)) 
+                            ? path_documents + @"ArchivoPrueba\capturasPantalla\screenshot_prueba.jpg"
+                            : rutaGuardar;
             try
             {
                 Screen screen = Screen.AllScreens[0]; /// Screen.PrimaryScreen;
@@ -346,15 +352,25 @@ namespace formularioDeteccionSignos_Form
             }
         }
 
+        /// <summary>
+        /// AGREGAMOS PARAMETROS DEL SISTEMA(CAMARAS, TEMPERATURA PERMITIDA)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click_1(object sender, EventArgs e)
         {
             catalogoParametrizacion ctlg_parametrizacion = new catalogoParametrizacion();
             ctlg_parametrizacion.Show();
         }
 
+        /// <summary>
+        /// REALIZA UNA CAPTURA DE PANTALLA
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            CapturaSS("");
+            fnScreenShot("");
             cuadroMensaje msg = new cuadroMensaje();
             msg.fnCargarMensaje("SE HA REALIZADO LA CAPTURA DE PANTALLA");
             msg.Show();
@@ -362,12 +378,11 @@ namespace formularioDeteccionSignos_Form
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            // SE CARGA LA IMAGEN DEL USUARIO DE LA BASE DE DATOS
+            // SE CARGA LA IMAGEN Y LOS DATOS DEL USUARIO DE LA BASE DE DATOS
             fncargaFotoUsuario();
-
+            fnCargaDatosEntrevistador_login();
+            //SE CARGA LA CAMARA EN UN FORM QUE SE CARGA E EL PANEL
             visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
-            //vcl.Show();
-
             if (this.panel_webcam.Controls.Count > 0)
                 this.panel_webcam.Controls.RemoveAt(0);
             Form fh = vcl as Form;
@@ -378,19 +393,28 @@ namespace formularioDeteccionSignos_Form
             this.panel_webcam.Controls.Add(fh);
             this.panel_webcam.Tag = fh;
             fh.Show();
-
+            //SE AGREGA EL FORM EN EL PANEL A TRAVES DE UN HILO
             //ThreadStart _delegate = new ThreadStart(hiloEjecucion);
             //Thread hilo = new Thread(() => hiloEjecucion());
             //Thread hilo = new Thread(_delegate);
             //hilo.Start();
         }
         
+        public void fnCargaDatosEntrevistador_login()
+        {
+            this.lbl_num_entrevistador.Text = this.user_data[1].ToString();
+            this.lbl_nombre_entrevistador.Text = this.user_data[2].ToString() + this.user_data[3].ToString() + this.user_data[4].ToString();
+            this.lbl_genero_entrevistador.Text = this.user_data[5].ToString();
+            this.lbl_edad_entrevistador.Text = this.user_data[6].ToString();
+            this.lbl_puesto_entrevistador.Text = this.user_data[8].ToString();
+            this.lbl_correo_entrevistador.Text = this.user_data[9].ToString();
+        }
+
         public void hiloEjecucion()
         {
             //Dispatcher.Invoke(((Action)(() => txtTrabajo.Text += "")));
             //Dispatcher.Invoke(((Action)(() => txtTrabajo.Text += "\nIniciando...")));
             //new Clases.Metodos().Prueba();
-
             Thread TypingThread = new Thread(delegate () {
                 // Cambiar el estado de los botones dentro del hilo TypingThread
                 // Esto no generará excepciones de nuevo !
@@ -413,14 +437,52 @@ namespace formularioDeteccionSignos_Form
                 this.panel_webcam.Controls.Add(fh);
                 this.panel_webcam.Tag = fh;
                 fh.Show();
-
             });
-
             // Cambiar el estado de los botones en el hilo principal
             //button1.Enabled = false;
             //button2.Enabled = true;
-
             TypingThread.Start();
+        }
+
+        /// <summary>
+        /// INGRESA UN USUARIO NUEVO AL SISTEMA
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            InputName user_input = new InputName();
+            usuarioClass nuevo_usuario = new usuarioClass();
+            cuadroMensaje mensaje = new cuadroMensaje();
+            if (DialogResult.OK == user_input.ShowDialog())
+            {
+                
+                if (nuevo_usuario.fnIngresaUsuario(user_input.userName, user_input.userPaterno, user_input.userMaterno, user_input.userGenero, user_input.userEdad, user_input.userRol, user_input.userPuesto, user_input.userCorreo, "jorbee2020"))
+                {
+                    mensaje.fnCargarMensaje("SE AGREGO EL USUARIO");
+                    mensaje.Show();
+                }
+                else
+                {
+                    mensaje.fnCargarMensaje("ERROR: NO SE AGREGO EL USUARIO");
+                    mensaje.Show();
+                }
+            }
+        }
+
+        /// <summary>
+        /// REIMPRIMIME UN COMPROBANTE QUE SE TENGA EN EL HISTORICO
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            filtroWithGrid filtro = new filtroWithGrid();
+            filtro.ShowDialog();
+
+            string id_user_search = filtro.id_recuperado;
+            gridHistoricoComprobantes historico = new gridHistoricoComprobantes(id_user_search);
+            historico.Show();
         }
     }
 }

@@ -37,7 +37,7 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(2, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(994, 623);
+            this.pictureBox1.Size = new System.Drawing.Size(525, 319);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
@@ -52,13 +52,14 @@
             this.INICIAR.TabIndex = 1;
             this.INICIAR.Text = "x";
             this.INICIAR.UseVisualStyleBackColor = true;
+            this.INICIAR.Visible = false;
             this.INICIAR.Click += new System.EventHandler(this.INICIAR_Click_1);
             // 
             // visorCamaraLuxand
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 638);
+            this.ClientSize = new System.Drawing.Size(531, 325);
             this.Controls.Add(this.INICIAR);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

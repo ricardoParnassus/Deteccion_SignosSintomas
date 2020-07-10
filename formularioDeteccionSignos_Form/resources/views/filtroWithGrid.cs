@@ -61,5 +61,12 @@ namespace formularioDeteccionSignos_Form.resources.views
             Thread.Sleep(2000);
             this.Hide();
         }
+
+        private void dgv_empleados_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            this.id_recuperado = dgv_empleados.CurrentRow.Cells[0].Value.ToString();
+            Thread.Sleep(2000);
+            this.Hide();
+        }
     }
 }

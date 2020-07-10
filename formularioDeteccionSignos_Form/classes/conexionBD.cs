@@ -59,10 +59,7 @@ namespace formularioDeteccionSignos_Form.classes
                 {
                     fnAbrirConexion();
                     cmd = new SqlCommand(query);
-                    if (cmd.ExecuteNonQuery() > 0)
-                        return true;
-                    else
-                        return false;
+                    return cmd.ExecuteNonQuery() > 0 ? true : false;
                 }
                 return false;
             }

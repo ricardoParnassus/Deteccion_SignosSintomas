@@ -42,9 +42,9 @@
             this.txt_password_cam = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
-            this.cmbbx_marca_camara = new System.Windows.Forms.ComboBox();
             this.cmbbx_tipo_terminal = new System.Windows.Forms.ComboBox();
+            this.cmbbx_marca_camara = new System.Windows.Forms.ComboBox();
+            this.materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +55,7 @@
             this.materialLabel1.Depth = 0;
             this.materialLabel1.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel1.Location = new System.Drawing.Point(19, 27);
+            this.materialLabel1.Location = new System.Drawing.Point(24, 34);
             this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel1.Name = "materialLabel1";
             this.materialLabel1.Size = new System.Drawing.Size(259, 19);
@@ -97,9 +97,9 @@
             this.materialLabel4.Location = new System.Drawing.Point(24, 122);
             this.materialLabel4.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel4.Name = "materialLabel4";
-            this.materialLabel4.Size = new System.Drawing.Size(112, 19);
+            this.materialLabel4.Size = new System.Drawing.Size(75, 19);
             this.materialLabel4.TabIndex = 3;
-            this.materialLabel4.Text = "USUARIO CAM:";
+            this.materialLabel4.Text = "USUARIO:";
             // 
             // materialLabel5
             // 
@@ -110,9 +110,9 @@
             this.materialLabel5.Location = new System.Drawing.Point(24, 154);
             this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel5.Name = "materialLabel5";
-            this.materialLabel5.Size = new System.Drawing.Size(129, 19);
+            this.materialLabel5.Size = new System.Drawing.Size(92, 19);
             this.materialLabel5.TabIndex = 4;
-            this.materialLabel5.Text = "PASSWORD CAM:";
+            this.materialLabel5.Text = "PASSWORD:";
             // 
             // materialLabel6
             // 
@@ -130,7 +130,7 @@
             // btn_guardar
             // 
             this.btn_guardar.Depth = 0;
-            this.btn_guardar.Location = new System.Drawing.Point(141, 452);
+            this.btn_guardar.Location = new System.Drawing.Point(141, 395);
             this.btn_guardar.MouseState = MaterialSkin.MouseState.HOVER;
             this.btn_guardar.Name = "btn_guardar";
             this.btn_guardar.Primary = true;
@@ -142,37 +142,37 @@
             // 
             // txt_temperatura
             // 
-            this.txt_temperatura.Location = new System.Drawing.Point(300, 27);
+            this.txt_temperatura.Location = new System.Drawing.Point(305, 34);
             this.txt_temperatura.Name = "txt_temperatura";
-            this.txt_temperatura.Size = new System.Drawing.Size(120, 20);
+            this.txt_temperatura.Size = new System.Drawing.Size(161, 20);
             this.txt_temperatura.TabIndex = 7;
             // 
             // txt_ip_camara
             // 
             this.txt_ip_camara.Location = new System.Drawing.Point(246, 58);
             this.txt_ip_camara.Name = "txt_ip_camara";
-            this.txt_ip_camara.Size = new System.Drawing.Size(179, 20);
+            this.txt_ip_camara.Size = new System.Drawing.Size(220, 20);
             this.txt_ip_camara.TabIndex = 8;
             // 
             // txt_puerto_camara
             // 
             this.txt_puerto_camara.Location = new System.Drawing.Point(246, 89);
             this.txt_puerto_camara.Name = "txt_puerto_camara";
-            this.txt_puerto_camara.Size = new System.Drawing.Size(179, 20);
+            this.txt_puerto_camara.Size = new System.Drawing.Size(220, 20);
             this.txt_puerto_camara.TabIndex = 9;
             // 
             // txt_usuario_cam
             // 
             this.txt_usuario_cam.Location = new System.Drawing.Point(246, 121);
             this.txt_usuario_cam.Name = "txt_usuario_cam";
-            this.txt_usuario_cam.Size = new System.Drawing.Size(179, 20);
+            this.txt_usuario_cam.Size = new System.Drawing.Size(220, 20);
             this.txt_usuario_cam.TabIndex = 10;
             // 
             // txt_password_cam
             // 
             this.txt_password_cam.Location = new System.Drawing.Point(246, 153);
             this.txt_password_cam.Name = "txt_password_cam";
-            this.txt_password_cam.Size = new System.Drawing.Size(179, 20);
+            this.txt_password_cam.Size = new System.Drawing.Size(220, 20);
             this.txt_password_cam.TabIndex = 11;
             // 
             // groupBox1
@@ -180,9 +180,9 @@
             this.groupBox1.Controls.Add(this.materialLabel1);
             this.groupBox1.Controls.Add(this.txt_temperatura);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(32, 80);
+            this.groupBox1.Location = new System.Drawing.Point(12, 80);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(446, 121);
+            this.groupBox1.Size = new System.Drawing.Size(486, 80);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parametrización del sistema";
@@ -202,12 +202,28 @@
             this.groupBox2.Controls.Add(this.materialLabel3);
             this.groupBox2.Controls.Add(this.materialLabel2);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(32, 219);
+            this.groupBox2.Location = new System.Drawing.Point(12, 166);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(445, 223);
+            this.groupBox2.Size = new System.Drawing.Size(486, 223);
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuraciones del sistema ";
+            // 
+            // cmbbx_tipo_terminal
+            // 
+            this.cmbbx_tipo_terminal.FormattingEnabled = true;
+            this.cmbbx_tipo_terminal.Location = new System.Drawing.Point(246, 181);
+            this.cmbbx_tipo_terminal.Name = "cmbbx_tipo_terminal";
+            this.cmbbx_tipo_terminal.Size = new System.Drawing.Size(220, 21);
+            this.cmbbx_tipo_terminal.TabIndex = 15;
+            // 
+            // cmbbx_marca_camara
+            // 
+            this.cmbbx_marca_camara.FormattingEnabled = true;
+            this.cmbbx_marca_camara.Location = new System.Drawing.Point(246, 24);
+            this.cmbbx_marca_camara.Name = "cmbbx_marca_camara";
+            this.cmbbx_marca_camara.Size = new System.Drawing.Size(220, 21);
+            this.cmbbx_marca_camara.TabIndex = 14;
             // 
             // materialLabel7
             // 
@@ -222,27 +238,11 @@
             this.materialLabel7.TabIndex = 13;
             this.materialLabel7.Text = "MARCA:";
             // 
-            // cmbbx_marca_camara
-            // 
-            this.cmbbx_marca_camara.FormattingEnabled = true;
-            this.cmbbx_marca_camara.Location = new System.Drawing.Point(246, 24);
-            this.cmbbx_marca_camara.Name = "cmbbx_marca_camara";
-            this.cmbbx_marca_camara.Size = new System.Drawing.Size(179, 21);
-            this.cmbbx_marca_camara.TabIndex = 14;
-            // 
-            // cmbbx_tipo_terminal
-            // 
-            this.cmbbx_tipo_terminal.FormattingEnabled = true;
-            this.cmbbx_tipo_terminal.Location = new System.Drawing.Point(246, 181);
-            this.cmbbx_tipo_terminal.Name = "cmbbx_tipo_terminal";
-            this.cmbbx_tipo_terminal.Size = new System.Drawing.Size(179, 21);
-            this.cmbbx_tipo_terminal.TabIndex = 15;
-            // 
             // catalogoParametrizacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 509);
+            this.ClientSize = new System.Drawing.Size(510, 450);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btn_guardar);

@@ -43,18 +43,17 @@
             // 
             // web_browser_files
             // 
-            this.web_browser_files.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.web_browser_files.Location = new System.Drawing.Point(0, 0);
+            this.web_browser_files.Location = new System.Drawing.Point(-17, -19);
             this.web_browser_files.MinimumSize = new System.Drawing.Size(20, 20);
             this.web_browser_files.Name = "web_browser_files";
-            this.web_browser_files.Size = new System.Drawing.Size(782, 431);
+            this.web_browser_files.Size = new System.Drawing.Size(883, 521);
             this.web_browser_files.TabIndex = 0;
             // 
             // ComprobanteVisor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(823, 547);
+            this.ClientSize = new System.Drawing.Size(892, 594);
             this.Controls.Add(this.panel1);
             this.Name = "ComprobanteVisor";
             this.Text = "ComprobanteVisor";
