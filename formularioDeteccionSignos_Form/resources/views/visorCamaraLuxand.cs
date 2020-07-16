@@ -391,18 +391,18 @@ namespace formularioDeteccionSignos_Form.resources.views
 
         private void fnRegistraUsuarioBD(string nombre, string paterno, string materno, string genero, string edad, string rol, string puesto, string correo)
         {
-            usuarioClass nuevo_usuario = new usuarioClass();
-            cuadroMensaje mensaje = new cuadroMensaje();
-            if (nuevo_usuario.fnIngresaUsuario(nombre, paterno, materno, genero, edad, rol, puesto, correo, "jorbee2020"))
-            {
-                mensaje.fnCargarMensaje("SE AGREGO EL USUARIO");
-                mensaje.Show();
-            }
-            else
-            {
-                mensaje.fnCargarMensaje("ERROR: NO SE AGREGO EL USUARIO");
-                mensaje.Show();
-            }
+            //usuarioClass nuevo_usuario = new usuarioClass();
+            //cuadroMensaje mensaje = new cuadroMensaje();
+            //if (nuevo_usuario.fnIngresaUsuario(nombre, paterno, materno, genero, edad, rol, puesto, correo, "jorbee2020"))
+            //{
+            //    mensaje.fnCargarMensaje("SE AGREGO EL USUARIO");
+            //    mensaje.Show();
+            //}
+            //else
+            //{
+            //    mensaje.fnCargarMensaje("ERROR: NO SE AGREGO EL USUARIO");
+            //    mensaje.Show();
+            //}
         }
     }
 }

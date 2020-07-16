@@ -73,6 +73,16 @@ namespace formularioDeteccionSignos_Form.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap arrow_sign_reload_icon_circle_button_vector_13928512 {
+            get {
+                object obj = ResourceManager.GetObject("arrow-sign-reload-icon-circle-button-vector-13928512", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Camera_Moto_30013 {
             get {
                 object obj = ResourceManager.GetObject("Camera_Moto_30013", resourceCulture);

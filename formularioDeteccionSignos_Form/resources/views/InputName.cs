@@ -22,6 +22,7 @@ namespace formularioDeteccionSignos_Form.resources.views
         public string userRol;
         public string userPuesto;
         public string userCorreo;
+        public string userPathImagen;
         #endregion
 
         #region ORIGINAL
@@ -120,5 +121,32 @@ namespace formularioDeteccionSignos_Form.resources.views
         {
             userCorreo = textBox7.Text;
         }
+
+        private void textBox8_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            {
+                InitialDirectory = @"C:\",
+                Title = "Browse Image Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                //DefaultExt = "txt",
+                //Filter = "txt files (*.txt)|*.txt",
+                //FilterIndex = 2,
+                //RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textBox8.Text = openFileDialog1.FileName;
+                this.userPathImagen = textBox8.Text;
+            }
+        }
+
     }
 }

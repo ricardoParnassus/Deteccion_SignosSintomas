@@ -33,7 +33,7 @@ namespace formularioDeteccionSignos_Form
         [DllImport("gdi32.dll")]
         static extern bool DeleteObject(IntPtr hObject);
         List<ORealPlay> _Devices;
-        ORespuesta _Respuesta;
+        ORespuesta[] _Respuesta;
         OWebcam _Webcam;
         int _Camaras;
         int _XLocation;
@@ -44,6 +44,11 @@ namespace formularioDeteccionSignos_Form
         public string id_entrevistador = string.Empty;
         string id_filtro = string.Empty;
         object[] user_data;
+        DataTable datos_camara;
+        string id_transaccion = string.Empty;
+        int flag = 0;
+        int width = 0;
+        int height = 0;
         #endregion
 
         //CONSTRUCTOR
@@ -55,29 +60,28 @@ namespace formularioDeteccionSignos_Form
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //se carga el formulario winform
-            //conexionBD cnn = new conexionBD();
-            //cnn.fnInsertaIMagenBDD(1, @"C:\Users\Phrankie Garcia\Documents\ArchivoPrueba\descarga_1.jpg");
-            this.Location = new Point(0, 0); //sobra si tienes la posición en el diseño
-            //this.Size = new Size(this.Width, Screen.PrimaryScreen.WorkingArea.Size.Height);
-            //this.WindowState = FormWindowState.Maximized;
-            fnInicializaCamaraHikVision();
-            fnShowCameraHikVison();
-            //fnConectarWebCam();
+
+            // Declaramos una variable para manejar los monitores
+            Screen[] sMonitores;
+            sMonitores = Screen.AllScreens;
+            // Posicion del formulario
+            this.Left = sMonitores[1].Bounds.Left;
+            this.Top = sMonitores[1].Bounds.Top;
+            DataTable dtbl = new DataTable();
+            conexionBD cnn = new conexionBD();
+            dtbl = cnn.fnConsultaSentencia("select marca, dir_ip from tbl_camaras");
+            foreach (DataRow item in dtbl.Rows)
+            {
+                cbbx_camara_empleado.Items.Add(item.Field<string>("marca") + " " +  item.Field<string>("dir_ip"));
+                cbbx_camara_entrevistador.Items.Add(item.Field<string>("marca") + " " + item.Field<string>("dir_ip"));
+            }
         }
         
-        public void fncargaFotoUsuario()
+        public void fncargaFotoUsuario(string id)
         {
-            try
-            {
-                conexionBD cc = new conexionBD();
-                img_fotoUsuario.Image = cc.ObtenerBitmapBDD(Int32.Parse(id_entrevistador));
-                img_fotoUsuario.SizeMode = PictureBoxSizeMode.StretchImage;
-            }
-            catch (Exception ex)
-            {
-
-            }
+            conexionBD cc = new conexionBD();
+            img_fotoUsuario.Image = cc.ObtenerBitmapBDD(Int32.Parse(id), "tbl_fotoUsuarios", "id_user=@id");
+            img_fotoUsuario.SizeMode = PictureBoxSizeMode.StretchImage;
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -123,6 +127,10 @@ namespace formularioDeteccionSignos_Form
                         txtEdad.Text = array_usuario[6].ToString();
                         txtPuesto.Text = /*array_usuario[8].ToString();*/ "Supervisor";
                         txt_correo.Text = array_usuario[9].ToString();
+
+                        conexionBD cc = new conexionBD();
+                        pictureBox1.Image = cc.ObtenerBitmapBDD(Int32.Parse(array_usuario[0].ToString()), "tbl_fotoUsuarios", "id_user = @id");
+                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                     }
                 }
                 else
@@ -136,23 +144,73 @@ namespace formularioDeteccionSignos_Form
                 Console.WriteLine(ex.Message + " " + ex.StackTrace);
             }
         }
-        private void materialRaisedButton1_Click(object sender, EventArgs e)
-        {   
-            fnValidaTemperatura();
 
-            Form2 form2 = new Form2();
-            form2.Show();
+        public string fnGeneraTransaccionPrevia()
+        {
+            conexionBD cnn = new conexionBD();
+            transacciones trans = new transacciones();
+            if(trans.fnInsertaDatosTransaccion(txt_num_empleado.Text, id_entrevistador, DateTime.Now.ToString("MM/dd/yyyy"), "0", "0", "0", "0", "0", " "))
+            {
+                DataTable dtl = cnn.fnConsultaSentencia("SELECT id_det FROM tbl_transaccionDet WHERE id_user= " + txt_num_empleado.Text + " AND id_encuestador = " + id_entrevistador + " AND fiebre = 0 AND tos_estornudos = 0 AND malestar_gen = 0 AND dolor_cabeza = 0 AND dificultad_resp = 0 AND path_comprobante = ' '");
+                foreach (DataRow item in dtl.Rows)
+                {
+                    object[] obj = item.ItemArray;
+                    return obj[0].ToString();
+                }
+            }
+            return string.Empty;
         }
 
-        public void fnValidaTemperatura()
+        private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
-            float temp = float.Parse(this.txt_temperatura.Text, CultureInfo.InvariantCulture.NumberFormat);
-            string temp_BDConfig = "37.5";
-            float aux1 = float.Parse(temp_BDConfig, CultureInfo.InvariantCulture.NumberFormat);
-            if (temp >= aux1)
+            if (string.IsNullOrEmpty(txtCuestionado.Text) || string.IsNullOrWhiteSpace(txtCuestionado.Text) || string.IsNullOrEmpty(txt_correo.Text) || string.IsNullOrWhiteSpace(txt_correo.Text))
             {
-                message msg = new message();
-                msg.ShowDialog();
+                cuadroMensaje mensaje = new cuadroMensaje();
+                mensaje.fnCargarMensaje("Debes ingresar datos del empleado");
+                mensaje.ShowDialog();
+                return;
+            }
+            if (fnValidaTemperatura())
+            {
+                Form2 form2 = new Form2(txt_num_empleado.Text, id_entrevistador);
+                this.id_transaccion = fnGeneraTransaccionPrevia();
+                form2.id_transaccion = this.id_transaccion;
+                fnScreenShot();
+                form2.Show();
+            }
+
+            this.txt_num_empleado.Text = string.Empty;
+            this.txtCuestionado.Text = string.Empty;
+            this.txtGenero.Text = string.Empty;
+            this.txtEdad.Text = string.Empty;
+            this.txtPuesto.Text = string.Empty;
+            this.txt_correo.Text = string.Empty;
+            this.txt_temperatura.Text = string.Empty;
+            this.pictureBox1.Image = null;
+            return;
+        }
+
+        public bool fnValidaTemperatura()
+        {
+            if (string.IsNullOrEmpty(this.txt_temperatura.Text) || string.IsNullOrWhiteSpace(this.txt_temperatura.Text))
+            {
+                cuadroMensaje mensaje = new cuadroMensaje();
+                mensaje.fnCargarMensaje("DEBES DE INGRESAR LA TEMPERATURA");
+                mensaje.ShowDialog();
+                return false;
+            }
+            else
+            {
+                float temp = float.Parse(this.txt_temperatura.Text, CultureInfo.InvariantCulture.NumberFormat);
+                string temp_BDConfig = "37.5";
+                float aux1 = float.Parse(temp_BDConfig, CultureInfo.InvariantCulture.NumberFormat);
+                if (temp >= aux1)
+                {
+                    message msg = new message();
+                    msg.ShowDialog();
+                    return true;
+                }
+                return true;
             }
         }
 
@@ -160,19 +218,6 @@ namespace formularioDeteccionSignos_Form
         {
             filtroWithGrid filtro = new filtroWithGrid();
             filtro.ShowDialog();
-
-            //FormCollection fc = Application.OpenForms;
-            //foreach (Form frm in fc)
-            //{
-            //    //if (frm.Name == "filtroWithGrid") 
-            //}
-
-            //if (DialogResult.OK == filtro.ShowDialog())
-            //{
-            //    id_filtro = filtro.id_recuperado;
-            //    fnFiltroPorEmpleado(id_filtro);
-            //}
-
             id_filtro = filtro.id_recuperado;
             fnFiltroPorEmpleado(id_filtro);
         }
@@ -185,64 +230,100 @@ namespace formularioDeteccionSignos_Form
 
         public void fnInicializaCamaraHikVision()
         {
-            try
+            //INICIALIZAMOS LAS VARIABLES
+            _Devices = new List<ORealPlay>();
+            _Respuesta = new ORespuesta[10];
+            int contador = 0;
+            _Camaras = 0;
+            _XLocation = 0;
+            _YLocation = 0;
+            //LOGEO DE CAMARAS
+            ORealPlay[] _Data = new ORealPlay[10];
+            parameters parametros = new parameters();
+            this.datos_camara = parametros.fnRecuperaDatosCamara();
+            foreach (DataRow item in this.datos_camara.Rows)
             {
-                //INICIALIZAMOS LAS VARIABLES
-                _Devices = new List<ORealPlay>();
-                _Respuesta = new ORespuesta();
-                _Camaras = 0;
-                _XLocation = 0;
-                _YLocation = 0;
-                //LOGEO DE CAMARAS
-                ORealPlay _Data = new ORealPlay();
-                //DATOS CAMARA HIKVISION
-                _Data.IP = "192.168.1.64";
-                _Data.Puerto = ushort.Parse("8000");
-                _Data.Usuario = "admin";
-                _Data.Password = "JORBEE2020";
-
-                _Respuesta = _Data.LoginHikvision();
-                if (!_Respuesta.Exitoso)
+                if (item.Field<string>("marca").Equals("DAHUA") || item.Field<string>("marca").Equals("HIKVISION"))
                 {
-                    //MessageBox.Show(_Respuesta.Mensaje);
-                    return;
+                    _Data[contador] = new ORealPlay();
+                    _Respuesta[contador] = new ORespuesta();
+                    _Data[contador].IP = item.Field<string>("dir_ip");
+                    _Data[contador].Puerto = ushort.Parse(item.Field<string>("dir_port"));
+                    _Data[contador].Usuario = item.Field<string>("usuario");
+                    _Data[contador].Password = item.Field<string>("contra");
+                    if (item.Field<string>("marca").Equals("DAHUA"))
+                    {
+                        _Respuesta[contador] = _Data[contador].LoginDahua();
+                        if (!_Respuesta[contador].Exitoso)
+                        {
+                            MessageBox.Show(_Respuesta[contador].Mensaje);
+                        }
+                        _Data[contador].Nombre = "Dahua " + _Data[contador].IP;
+                        _Devices.Add(_Data[contador]);
+                    }
+                    else if (item.Field<string>("marca").Equals("HIKVISION"))
+                    {
+                        _Respuesta[contador] = _Data[contador].LoginHikvision();
+                        if (!_Respuesta[contador].Exitoso)
+                        {
+                            MessageBox.Show(_Respuesta[contador].Mensaje);
+                        }
+                        _Data[contador].Nombre = "Hikvision " + _Data[contador].IP;
+                        _Devices.Add(_Data[contador]);
+                    }
+                    contador++;
                 }
-                //MessageBox.Show("Login Exitoso!!!");
-                _Data.Nombre = "Hikvision " + _Data.IP;
-                _Devices.Add(_Data);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + " " + ex.StackTrace);
             }
         }
 
-        public void fnShowCameraHikVison()
+        public void fnShowCameraHikVison(string panel, string marca, string dir_ip)
         {
             try
             {
-                ORealPlay _Device = _Devices[0];
-                _Device.Canal = 1;
-
-                var picture = new PictureBox
+                int aux = 0;
+                _Respuesta = new ORespuesta[10];
+                foreach (ORealPlay _Device in _Devices)
                 {
-                    Name = "canal" + _Camaras.ToString(),
-                    Size = new Size(500, 320),
-                    Location = new Point(_XLocation, _YLocation),
-                };
-                _XLocation += 500;
-                if (_XLocation > 1500)
-                {
-                    _XLocation = 0;
-                    _YLocation += 320;
-                }
-                panel_camaraExt.Controls.Add(picture);
-                _Device.Window = picture.Handle;
-                _Respuesta = _Device.StartRealPlayHikvision();
-                if (!_Respuesta.Exitoso)
-                {
-                    MessageBox.Show(_Respuesta.Mensaje);
-                    return;
+                    if (_Device.Nombre.ToString().ToUpper().Trim().Equals((marca + " " + dir_ip).ToUpper().Trim()))
+                    {
+                        _Device.Canal = 1;
+                        var picture = new PictureBox
+                        {
+                            Name = "canal" + _Camaras.ToString(),
+                            Size = new Size(520, 320),
+                            Location = new Point(_XLocation, _YLocation),
+                        };
+                        if (panel.Equals("ENTREVISTADOR"))
+                        {
+                            if (this.panel_webcam.Controls.Count > 0)
+                                this.panel_webcam.Controls.RemoveAt(0);
+                            panel_webcam.Controls.Add(picture);
+                            _Device.Window = picture.Handle;
+                        }
+                        else if (panel.Equals("EMPLEADO"))
+                        {
+                            if (this.panel_camaraExt.Controls.Count > 0)
+                                this.panel_camaraExt.Controls.RemoveAt(0);
+                            panel_camaraExt.Controls.Add(picture);
+                            _Device.Window = picture.Handle;
+                        }
+                        if (_Device.Nombre.ToUpper().Contains("DAHUA"))
+                        {
+                            _Respuesta[aux] = _Device.StartRealPlayDahua();
+                            if (!_Respuesta[aux].Exitoso)
+                            {
+                                MessageBox.Show(_Respuesta[aux].Mensaje);
+                            }
+                        }
+                        else if (_Device.Nombre.ToUpper().Contains("HIKVISION"))
+                        {
+                            _Respuesta[aux] = _Device.StartRealPlayHikvision();
+                            if (!_Respuesta[aux].Exitoso)
+                            {
+                                MessageBox.Show(_Respuesta[aux].Mensaje);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -251,7 +332,37 @@ namespace formularioDeteccionSignos_Form
             }
         }
 
-        public void fnConectarWebCam()
+        public void fnConectarWebCam_Luxand(string panel)
+        {
+            if (panel.Equals("EMPLEADO"))
+            {
+                //SE CARGA LA CAMARA EN UN FORM QUE SE CARGA E EL PANEL
+                visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
+                if (this.panel_camaraExt.Controls.Count > 0)
+                    this.panel_camaraExt.Controls.RemoveAt(0);
+                Form fh = vcl as Form;
+                fh.TopLevel = false;
+                fh.Dock = DockStyle.Fill;
+                this.panel_camaraExt.Controls.Add(fh);
+                this.panel_camaraExt.Tag = fh;
+                fh.Show();
+            }
+            else
+            {
+                //SE CARGA LA CAMARA EN UN FORM QUE SE CARGA E EL PANEL
+                visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
+                if (this.panel_webcam.Controls.Count > 0)
+                    this.panel_webcam.Controls.RemoveAt(0);
+                Form fh = vcl as Form;
+                fh.TopLevel = false;
+                fh.Dock = DockStyle.Fill;
+                this.panel_webcam.Controls.Add(fh);
+                this.panel_webcam.Tag = fh;
+                fh.Show();
+            }
+        }
+
+        public void fnConectarWebCam(string panel)
         {
             _FilterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             _Webcam = new OWebcam();
@@ -260,16 +371,19 @@ namespace formularioDeteccionSignos_Form
             var picture = new PictureBox
             {
                 Name = "canal" + _Camaras.ToString(),
-                Size = new Size(800, 500),
+                Size = new Size(520, 320),
                 Location = new Point(_XLocation_pnlWebCam, _YLocation_pnlWebCam),
             };
-            _XLocation_pnlWebCam += 800;
-            if (_XLocation_pnlWebCam > 1500)
+            if (panel.Equals("ENTREVISTADOR"))
             {
-                _XLocation_pnlWebCam = 0;
-                _YLocation_pnlWebCam += 500;
+                if (panel_webcam.Controls.Count > 0)
+                {
+                    panel_webcam.Controls.RemoveAt(0);
+                }
+                panel_webcam.Controls.Add(picture);
             }
-            panel_webcam.Controls.Add(picture);
+            else panel_camaraExt.Controls.Add(picture);
+
             _Webcam.Image = picture;
             _Webcam.Device = new VideoCaptureDevice(_FilterInfoCollection[0].MonikerString);
             _Webcam.Device.NewFrame += VideoCaptureDevice_NewFrame;
@@ -283,68 +397,43 @@ namespace formularioDeteccionSignos_Form
 
         private void txt_num_empleado_KeyUp(object sender, KeyEventArgs e)
         {
+            if (string.IsNullOrEmpty(txt_num_empleado.Text) || string.IsNullOrWhiteSpace(txt_num_empleado.Text))
+            {
+                this.txtEdad.Text = string.Empty;
+                this.txtPuesto.Text = string.Empty;
+                this.txtGenero.Text = string.Empty;
+                this.txtCuestionado.Text = string.Empty;
+                this.txt_correo.Text = string.Empty;
+                this.txt_temperatura.Text = string.Empty;
+            }
             fnFiltroPorEmpleado(txt_num_empleado.Text);
         }
 
-        public void fnCargaDatosEntrevistador()
+        private void fnScreenShot()
         {
-            string entrada = this.id_entrevistador;
-            DataTable dtbl_datos = new DataTable();
             try
             {
-                //cargar los datos del empleado
-                string aux = string.Empty;
-                usuarioClass busqueda = new usuarioClass();
-                dtbl_datos = busqueda.fnSeleccionaUsuario(entrada);
-                if (dtbl_datos.Rows.Count > 0)
+                Screen[] screens = Screen.AllScreens;
+                foreach (Screen screen in screens)
                 {
-                    foreach (DataRow item in dtbl_datos.Rows)
-                    {
-                        object[] array_usuario = item.ItemArray;
-                        txtCuestionado.Text = array_usuario[2].ToString() + " " +
-                                              array_usuario[3].ToString() + " " +
-                                              array_usuario[4].ToString();
-                        txt_num_empleado.Text = array_usuario[0].ToString();
-                        txtGenero.Text = array_usuario[5].ToString();
-                        txtEdad.Text = array_usuario[6].ToString();
-                        txtPuesto.Text = /*array_usuario[8].ToString();*/ "Supervisor";
-                        txt_correo.Text = array_usuario[9].ToString();
-                    }
+                    /// Tamaño de la imagen
+                    int Width = screen.Bounds.Width;
+                    int Height = screen.Bounds.Height;
+                    System.Drawing.Rectangle captureRectangle = screen.Bounds;
+                    Bitmap captureBitmap = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    /// Capturando
+                    Graphics captureGraphics = Graphics.FromImage(captureBitmap);
+                    int dedondeX = captureRectangle.Left;
+                    int dedondeY = captureRectangle.Top;
+                    int hastadondeX = 0;
+                    int hastadondeY = 0;
+                    captureGraphics.CopyFromScreen(dedondeX, dedondeY, hastadondeX, hastadondeY, captureRectangle.Size);
+                    System.IO.MemoryStream stream = new System.IO.MemoryStream();
+                    captureBitmap.Save(stream, ImageFormat.Jpeg);
+                    /// Guardar la captura de pantalla en base de datos
+                    conexionBD cnn = new conexionBD();
+                    cnn.fnInsertaImagenBDD(stream.ToArray(), Int32.Parse(this.id_transaccion));
                 }
-                else
-                {
-                    return;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + " " + ex.StackTrace);
-            }
-        }
-
-        private void fnScreenShot(String rutaGuardar)
-        {
-            string path_documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string aux = (string.IsNullOrEmpty(rutaGuardar) || string.IsNullOrWhiteSpace(rutaGuardar)) 
-                            ? path_documents + @"ArchivoPrueba\capturasPantalla\screenshot_prueba.jpg"
-                            : rutaGuardar;
-            try
-            {
-                Screen screen = Screen.AllScreens[0]; /// Screen.PrimaryScreen;
-                /// Tamaño de la imagen
-                int Width = screen.Bounds.Width;
-                int Height = screen.Bounds.Height;
-                System.Drawing.Rectangle captureRectangle = screen.Bounds;
-                Bitmap captureBitmap = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                /// Capturando
-                Graphics captureGraphics = Graphics.FromImage(captureBitmap);
-                int dedondeX = captureRectangle.Left;
-                int dedondeY = captureRectangle.Top;
-                int hastadondeX = 0;
-                int hastadondeY = 0;
-                captureGraphics.CopyFromScreen(dedondeX, dedondeY, hastadondeX, hastadondeY, captureRectangle.Size);
-                captureBitmap.Save((string.IsNullOrEmpty(rutaGuardar) || string.IsNullOrWhiteSpace(rutaGuardar)) ? aux : rutaGuardar, ImageFormat.Jpeg);
             }
             catch (Exception ex)
             {
@@ -370,7 +459,7 @@ namespace formularioDeteccionSignos_Form
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            fnScreenShot("");
+            fnScreenShot();
             cuadroMensaje msg = new cuadroMensaje();
             msg.fnCargarMensaje("SE HA REALIZADO LA CAPTURA DE PANTALLA");
             msg.Show();
@@ -379,25 +468,26 @@ namespace formularioDeteccionSignos_Form
         private void Form1_Shown(object sender, EventArgs e)
         {
             // SE CARGA LA IMAGEN Y LOS DATOS DEL USUARIO DE LA BASE DE DATOS
-            fncargaFotoUsuario();
+            fncargaFotoUsuario(this.id_entrevistador);
             fnCargaDatosEntrevistador_login();
-            //SE CARGA LA CAMARA EN UN FORM QUE SE CARGA E EL PANEL
-            visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
-            if (this.panel_webcam.Controls.Count > 0)
-                this.panel_webcam.Controls.RemoveAt(0);
-            Form fh = vcl as Form;
-            fh.TopLevel = false;
-            fh.Dock = DockStyle.Fill;
-            //Dispatcher.Invoke(((Action) (() => this.panel_webcam.Controls.Add(fh))));
-            //Dispatcher.Invoke(((Action)(() => this.panel_webcam.Tag = fh)));
-            this.panel_webcam.Controls.Add(fh);
-            this.panel_webcam.Tag = fh;
-            fh.Show();
-            //SE AGREGA EL FORM EN EL PANEL A TRAVES DE UN HILO
-            //ThreadStart _delegate = new ThreadStart(hiloEjecucion);
-            //Thread hilo = new Thread(() => hiloEjecucion());
-            //Thread hilo = new Thread(_delegate);
-            //hilo.Start();
+            fnInicializaCamaraHikVision();
+            foreach (DataRow item in datos_camara.Rows)
+            {
+                if (item.Field<string>("marca").Equals("INTEGRATED CAMERA"))
+                {
+                    //fnConectarWebCam_Luxand(item.Field<string>("cuadro_camara"));
+                    //fnConectarWebCam();
+                }
+                else
+                {
+                    fnShowCameraHikVison(item.Field<string>("cuadro_camara"), item.Field<string>("marca"), item.Field<string>("dir_ip"));
+                }
+                
+            }
+            this.flag = 1;
+            width = this.Width;
+            height = this.Height;
+            this.WindowState = FormWindowState.Maximized;
         }
         
         public void fnCargaDatosEntrevistador_login()
@@ -408,40 +498,6 @@ namespace formularioDeteccionSignos_Form
             this.lbl_edad_entrevistador.Text = this.user_data[6].ToString();
             this.lbl_puesto_entrevistador.Text = this.user_data[8].ToString();
             this.lbl_correo_entrevistador.Text = this.user_data[9].ToString();
-        }
-
-        public void hiloEjecucion()
-        {
-            //Dispatcher.Invoke(((Action)(() => txtTrabajo.Text += "")));
-            //Dispatcher.Invoke(((Action)(() => txtTrabajo.Text += "\nIniciando...")));
-            //new Clases.Metodos().Prueba();
-            Thread TypingThread = new Thread(delegate () {
-                // Cambiar el estado de los botones dentro del hilo TypingThread
-                // Esto no generará excepciones de nuevo !
-                //if (button1.InvokeRequired)
-                //{
-                //    button1.Invoke(new MethodInvoker(delegate
-                //    {
-                //        button1.Enabled = true;
-                //        button2.Enabled = false;
-                //    }));
-                //}
-                visorCamaraLuxand vcl = new visorCamaraLuxand(user_data);
-                if (this.panel_webcam.Controls.Count > 0)
-                    this.panel_webcam.Controls.RemoveAt(0);
-                Form fh = vcl as Form;
-                fh.TopLevel = false;
-                fh.Dock = DockStyle.Fill;
-                //Dispatcher.Invoke(((Action) (() => this.panel_webcam.Controls.Add(fh))));
-                //Dispatcher.Invoke(((Action)(() => this.panel_webcam.Tag = fh)));
-                this.panel_webcam.Controls.Add(fh);
-                this.panel_webcam.Tag = fh;
-                fh.Show();
-            });
-            // Cambiar el estado de los botones en el hilo principal
-            //button1.Enabled = false;
-            //button2.Enabled = true;
-            TypingThread.Start();
         }
 
         /// <summary>
@@ -457,7 +513,7 @@ namespace formularioDeteccionSignos_Form
             if (DialogResult.OK == user_input.ShowDialog())
             {
                 
-                if (nuevo_usuario.fnIngresaUsuario(user_input.userName, user_input.userPaterno, user_input.userMaterno, user_input.userGenero, user_input.userEdad, user_input.userRol, user_input.userPuesto, user_input.userCorreo, "jorbee2020"))
+                if (nuevo_usuario.fnIngresaUsuario(user_input.userName, user_input.userPaterno, user_input.userMaterno, user_input.userGenero, user_input.userEdad, user_input.userRol, user_input.userPuesto, user_input.userCorreo, "jorbee2020", user_input.userPathImagen))
                 {
                     mensaje.fnCargarMensaje("SE AGREGO EL USUARIO");
                     mensaje.Show();
@@ -477,12 +533,157 @@ namespace formularioDeteccionSignos_Form
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            filtroWithGrid filtro = new filtroWithGrid();
-            filtro.ShowDialog();
+            gridHistoricoComprobantes historico = new gridHistoricoComprobantes();
+            historico.ShowDialog();
+        }
 
-            string id_user_search = filtro.id_recuperado;
-            gridHistoricoComprobantes historico = new gridHistoricoComprobantes(id_user_search);
-            historico.Show();
+        private void button5_Click(object sender, EventArgs e)
+        {
+            fncargaFotoUsuario(this.id_entrevistador);
+            fnCargaDatosEntrevistador_login();
+            fnInicializaCamaraHikVision();
+            foreach (DataRow item in datos_camara.Rows)
+            {
+                if (item.Field<string>("marca").Equals("INTEGRATED CAMERA"))
+                {
+                    //fnConectarWebCam_Luxand(item.Field<string>("cuadro_camara"));
+                    //fnConectarWebCam();
+                }
+                else
+                {
+                    fnShowCameraHikVison(item.Field<string>("cuadro_camara"), item.Field<string>("marca"), item.Field<string>("dir_ip"));
+                }
+            }
+            this.flag = 1;
+        }
+
+        private void txt_temperatura_TextChanged(object sender, EventArgs e)
+        {
+            if (txt_temperatura.Text.Length == 3)
+            {
+                txt_temperatura.Text = txt_temperatura.Text.Substring(0, 2) + "." + txt_temperatura.Text.Substring(2);
+            }
+        }
+
+        private void txt_temperatura_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            // Si el carácter pulsado no es un carácter válido se anula
+            e.Handled = !char.IsDigit(e.KeyChar) // No es dígito
+                        && !char.IsControl(e.KeyChar) // No es carácter de control (backspace)
+                        && (e.KeyChar != '.' // No es signo decimal o es la 1ª posición o ya hay un signo decimal
+                            || textBox.SelectionStart == 0
+                            || textBox.Text.Contains('.'));
+        }
+
+        private void cbbx_camara_empleado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string camara_conectar = cbbx_camara_empleado.SelectedItem.ToString();
+            if (flag != 0)
+            {
+                if (camara_conectar.Equals("INTEGRATED CAMERA"))
+                {
+                    fnConectarWebCam("ENTREVISTADOR");
+                    return;
+                }
+                int aux = 0;
+                _Respuesta = new ORespuesta[10];
+                foreach (ORealPlay _Device in _Devices)
+                {
+                    if (_Device.Nombre.ToUpper().Trim().Equals(camara_conectar.ToUpper().Trim()))
+                    {
+                        _Device.Canal = 1;
+                        var picture = new PictureBox
+                        {
+                            Name = "canal" + _Camaras.ToString(),
+                            Size = new Size(520, 320),
+                            Location = new Point(_XLocation, _YLocation),
+                        };
+                        if (this.panel_camaraExt.Controls.Count > 0)
+                            this.panel_camaraExt.Controls.RemoveAt(0);
+                        panel_camaraExt.Controls.Add(picture);
+                        _Device.Window = picture.Handle;
+
+                        if (_Device.Nombre.ToUpper().Contains("DAHUA"))
+                        {
+                            _Respuesta[aux] = _Device.StartRealPlayDahua();
+                            if (!_Respuesta[aux].Exitoso)
+                            {
+                                MessageBox.Show(_Respuesta[aux].Mensaje);
+                            }
+                        }
+                        else if (_Device.Nombre.ToUpper().Contains("HIKVISION"))
+                        {
+                            _Respuesta[aux] = _Device.StartRealPlayHikvision();
+                            if (!_Respuesta[aux].Exitoso)
+                            {
+                                MessageBox.Show(_Respuesta[aux].Mensaje);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void cbbx_camara_entrevistador_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string camara_conectar = cbbx_camara_entrevistador.SelectedItem.ToString();
+            if (flag != 0)
+            {
+                if (camara_conectar.Trim().Equals("INTEGRATED CAMERA"))
+                {
+                    fnConectarWebCam("ENTREVISTADOR");
+                    return;
+                }
+                int aux = 0;
+                _Respuesta = new ORespuesta[10];
+                foreach (ORealPlay _Device in _Devices)
+                {
+                    if (_Device.Nombre.ToUpper().Trim().Equals(camara_conectar.ToUpper().Trim()))
+                    {
+                        _Device.Canal = 1;
+                        var picture = new PictureBox
+                        {
+                            Name = "canal" + _Camaras.ToString(),
+                            Size = new Size(520, 320),
+                            Location = new Point(_XLocation, _YLocation),
+                        };
+                        if (this.panel_webcam.Controls.Count > 0)
+                            this.panel_webcam.Controls.RemoveAt(0);
+                        panel_webcam.Controls.Add(picture);
+                        _Device.Window = picture.Handle;
+
+                        if (_Device.Nombre.ToUpper().Contains("DAHUA"))
+                        {
+                            _Respuesta[aux] = _Device.StartRealPlayDahua();
+                            if (!_Respuesta[aux].Exitoso)
+                            {
+                                MessageBox.Show(_Respuesta[aux].Mensaje);
+                            }
+                        }
+                        else if (_Device.Nombre.ToUpper().Contains("HIKVISION"))
+                        {
+                            _Respuesta[aux] = _Device.StartRealPlayHikvision();
+                            if (!_Respuesta[aux].Exitoso)
+                            {
+                                MessageBox.Show(_Respuesta[aux].Mensaje);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if(flag != 0)
+            {
+                groupBox1.Location = new System.Drawing.Point(groupBox1.Location.X + ((this.Width - this.width)/2), groupBox1.Location.Y + ((this.Height - this.height)/2));
+                groupBox2.Location = new System.Drawing.Point(groupBox2.Location.X + ((this.Width - this.width)/2), groupBox2.Location.Y + ((this.Height - this.height)/2));
+                groupBox3.Location = new System.Drawing.Point(groupBox3.Location.X + ((this.Width - this.width)/2), groupBox3.Location.Y + ((this.Height - this.height)/2));
+                groupBox4.Location = new System.Drawing.Point(groupBox4.Location.X + ((this.Width - this.width)/2), groupBox4.Location.Y + ((this.Height - this.height)/2));
+            }
         }
     }
 }

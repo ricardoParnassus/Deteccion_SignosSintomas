@@ -51,14 +51,14 @@ namespace formularioDeteccionSignos_Form.classes
             {
                 if(cnn.State == System.Data.ConnectionState.Open)
                 {
-                    cmd = new SqlCommand(query);
+                    cmd = new SqlCommand(query, cnn);
                     if (cmd.ExecuteNonQuery() > 0)
                         return true;
                 }
                 else
                 {
                     fnAbrirConexion();
-                    cmd = new SqlCommand(query);
+                    cmd = new SqlCommand(query, cnn);
                     return cmd.ExecuteNonQuery() > 0 ? true : false;
                 }
                 return false;
@@ -102,7 +102,8 @@ namespace formularioDeteccionSignos_Form.classes
 
                 using (SqlCommand cmd = cnn.CreateCommand())
                 {
-                    cnn.Open();
+                    if (cnn.State != System.Data.ConnectionState.Open)
+                        cnn.Open();
                     cmd.CommandText = "INSERT INTO tbl_fotoUsuarios VALUES (" +
                         " @id_user" +
                         ", @imagen" +
@@ -110,7 +111,7 @@ namespace formularioDeteccionSignos_Form.classes
                         ")";
                     cmd.Parameters.Add("@id_user", SqlDbType.Int).Value = id;
                     cmd.Parameters.Add("@imagen", SqlDbType.Image).Value = arrImage;
-                    cmd.Parameters.Add("@descripcion", SqlDbType.NVarChar).Value = Path.GetFileName(pathFoto);
+                    cmd.Parameters.Add("@descripcion", SqlDbType.NVarChar).Value = " ";
 
                     cmd.ExecuteNonQuery();
                     cnn.Close();
@@ -122,16 +123,42 @@ namespace formularioDeteccionSignos_Form.classes
             }
         }
 
-        public System.Drawing.Image ObtenerBitmapBDD(int id)
+        public void fnInsertaImagenBDD(byte[] arrImage, int id_transaccion)
+        {
+            try
+            {
+                using (SqlCommand cmd = cnn.CreateCommand())
+                {
+                    if (cnn.State != System.Data.ConnectionState.Open)
+                        cnn.Open();
+                    cmd.CommandText = "INSERT INTO tbl_screenshot VALUES (" +
+                        " @id_trans" +
+                        ", @imagen" +
+                        ")";
+                    cmd.Parameters.Add("@id_trans", SqlDbType.Int).Value = id_transaccion;
+                    cmd.Parameters.Add("@imagen", SqlDbType.Image).Value = arrImage;
+
+                    cmd.ExecuteNonQuery();
+                    cnn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public System.Drawing.Image ObtenerBitmapBDD(int id, string tabla, string condition)
         {
             try
             {
                 using (SqlCommand cmd = cnn.CreateCommand())
                 {
                     cnn.Open();
-                    cmd.CommandText = "SELECT imagen FROM tbl_fotoUsuarios WHERE id_user=@id";
+                    cmd.CommandText = "SELECT imagen FROM " + tabla + " WHERE " + condition;
                     cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
                     byte[] arrImage = (byte[])cmd.ExecuteScalar();
+                    
                     cnn.Close();
                     MemoryStream ms = new MemoryStream(arrImage);
                     System.Drawing.Image img = System.Drawing.Image.FromStream(ms);

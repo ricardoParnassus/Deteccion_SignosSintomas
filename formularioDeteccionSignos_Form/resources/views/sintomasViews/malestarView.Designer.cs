@@ -1,6 +1,6 @@
-﻿namespace formularioDeteccionSignos_Form.resources.views
+﻿namespace formularioDeteccionSignos_Form.resources.views.sintomasViews
 {
-    partial class message
+    partial class malestarView
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.SuspendLayout();
             // 
             // materialLabel1
@@ -38,38 +37,22 @@
             this.materialLabel1.Depth = 0;
             this.materialLabel1.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel1.Location = new System.Drawing.Point(39, 94);
+            this.materialLabel1.Location = new System.Drawing.Point(28, 50);
             this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel1.Name = "materialLabel1";
-            this.materialLabel1.Size = new System.Drawing.Size(513, 57);
+            this.materialLabel1.Size = new System.Drawing.Size(451, 19);
             this.materialLabel1.TabIndex = 0;
-            this.materialLabel1.Text = "EL USUARIO PRESENTA SÍNTOMAS, POR FAVOR TERMINA DE \r\nREALIZAR EL CUESTIONARIO DE " +
-    "SÍNTOMAS IMPRIMA EL COMPROBANTE \r\nY REFIERA AL COLABORADOR CON EL SERVICIO MEDIC" +
-    "O";
+            this.materialLabel1.Text = "HA PRESENTADO MALESTAR GENERAL EN LOS ULTIMOS 7 DÍAS";
             // 
-            // materialRaisedButton1
-            // 
-            this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(196, 195);
-            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton1.Name = "materialRaisedButton1";
-            this.materialRaisedButton1.Primary = true;
-            this.materialRaisedButton1.Size = new System.Drawing.Size(184, 48);
-            this.materialRaisedButton1.TabIndex = 1;
-            this.materialRaisedButton1.Text = "OK";
-            this.materialRaisedButton1.UseVisualStyleBackColor = true;
-            this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
-            // 
-            // message
+            // malestarView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(591, 270);
-            this.Controls.Add(this.materialRaisedButton1);
+            this.ClientSize = new System.Drawing.Size(507, 121);
             this.Controls.Add(this.materialLabel1);
-            this.Name = "message";
-            this.Text = "ALERTA";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "malestarView";
+            this.Text = "malestarView";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -78,6 +61,5 @@
         #endregion
 
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
-        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
     }
 }

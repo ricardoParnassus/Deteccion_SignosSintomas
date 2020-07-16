@@ -16,9 +16,15 @@ namespace formularioDeteccionSignos_Form.resources.views
     {
         string id_transaccion = string.Empty;
         string id_empleado = string.Empty;
-        string numero_entrevistador = string.Empty;
-        string path_archivo = string.Empty;
+        public string numero_entrevistador = string.Empty;
+        public string path_archivo = string.Empty;
+        string codigo_actual = string.Empty;
         int flag = 0;
+        public int fiebre = 0;
+        public int tos = 0;
+        public int malestar = 0;
+        public int dolor = 0;
+        public int dificultad = 0;
         /*
          0 -- nuevo archivo
          1 -- cargar un archivo historico
@@ -26,10 +32,13 @@ namespace formularioDeteccionSignos_Form.resources.views
              */
         public ComprobanteVisor(int flag, int id)
         {
+            InitializeComponent();
+
             this.flag = flag;
             if (flag == 0) this.id_empleado = id.ToString();
             else this.id_transaccion = id.ToString();
-            InitializeComponent();
+            this.codigo_actual = fnGeneraCodigoArchivo(this.id_empleado);
+            this.path_archivo = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ArchivoPrueba\" + codigo_actual + ".pdf";
         }
 
         private void ComprobanteVisor_Load(object sender, EventArgs e)
@@ -46,16 +55,36 @@ namespace formularioDeteccionSignos_Form.resources.views
             DateTime dateTime = DateTime.Now;
             string fecha_actual = dateTime.ToString("MM/dd/yyyy");
             object[] obj;
-            string codigo_actual = fnGeneraCodigoArchivo(this.id_empleado);
             foreach (DataRow item in usuario_dat.Rows)
             {
                 obj = item.ItemArray;
                 nombre_completo = obj[2].ToString() + " " + obj[3].ToString() + " " + obj[4].ToString();
             }
-            CrearComprobantePDF pdf = new CrearComprobantePDF(nombre_completo, fecha_actual, codigo_actual, this.numero_entrevistador);
+            CrearComprobantePDF pdf = new CrearComprobantePDF(nombre_completo, fecha_actual, this.codigo_actual, this.numero_entrevistador, this.fiebre, this.tos, this.malestar, this.dolor, this.dificultad);
             pdf.fnCrearArchivo();
             pdf.fnConstruirCuerpoArchivo();
-            web_browser_files.Navigate(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"ArchivoPrueba\" + codigo_actual + ".pdf");
+            
+            web_browser_files.Navigate(this.path_archivo);
+        }
+
+        public void fnCargaNuevoArchivo(int fiebre, int tos, int malestar, int dolor, int dificultad)
+        {
+            usuarioClass user_dat = new usuarioClass();
+            DataTable usuario_dat = user_dat.fnSeleccionaUsuario(id_empleado);
+            string nombre_completo = string.Empty;
+            DateTime dateTime = DateTime.Now;
+            string fecha_actual = dateTime.ToString("MM/dd/yyyy");
+            object[] obj;
+            foreach (DataRow item in usuario_dat.Rows)
+            {
+                obj = item.ItemArray;
+                nombre_completo = obj[2].ToString() + " " + obj[3].ToString() + " " + obj[4].ToString();
+            }
+            CrearComprobantePDF pdf = new CrearComprobantePDF(nombre_completo, fecha_actual, this.codigo_actual, this.numero_entrevistador, fiebre, tos, malestar, dolor, dificultad);
+            pdf.fnCrearArchivo();
+            pdf.fnConstruirCuerpoArchivo();
+
+            web_browser_files.Navigate(this.path_archivo);
         }
 
         public void fnCargaArchivoHistorico()
@@ -74,7 +103,14 @@ namespace formularioDeteccionSignos_Form.resources.views
 
         public string fnGeneraCodigoArchivo(string num_empleado)
         {
-            return string.Empty;
+            //numero de empleado, fecha, random de 4 digitos
+            int _min = 1000;
+            int _max = 9999;
+            Random _rdm = new Random();
+            string codigo = _rdm.Next(_min, _max).ToString();
+            codigo = (codigo.Length < 4) ? codigo.PadLeft(4, '0') : codigo;
+            DateTime fecha = DateTime.Now;
+            return "_" + num_empleado + "_" + fecha.ToString("MM/dd/yyyy").Replace("/", "") + codigo;
         }
     }
 }

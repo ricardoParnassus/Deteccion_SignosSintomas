@@ -98,18 +98,38 @@ namespace formularioDeteccionSignos_Form.classes
         public Image fnRecuperaFotoBDDUsuario(string id)
         {
             conexionBD cnn = new conexionBD();
-            Image imagen_usuario = cnn.ObtenerBitmapBDD(Int32.Parse(id));
+            Image imagen_usuario = cnn.ObtenerBitmapBDD(Int32.Parse(id), "tbl_fotoUsuarios", "id_user=@id");
             return imagen_usuario;
         }
 
-        public bool fnIngresaUsuario(string nombre, string a_paterno, string a_materno, string genero, string edad, string rol, string puesto, string correo, string contrasenia)
+        public bool fnIngresaUsuario(string nombre, string a_paterno, string a_materno, string genero, string edad, string rol, string puesto, string correo, string contrasenia, string path_imagen)
         {
             try
             {
-                string str_query = "exec sp_insertaUsuario '" + nombre + "', '" + a_paterno + "', '" + a_materno + "', '" + genero + "', " + edad + ", " + rol + ", " + puesto + ", '" + correo + "', '" + contrasenia + "';";
                 conexionBD consulta = new conexionBD();
+                string query_aux = "select max(id_jorbee) from tbl_usuarios";
+                string id_jorbee = string.Empty;
+                DataTable tbl_aux = consulta.fnConsultaSentencia(query_aux);
+                foreach (DataRow item in tbl_aux.Rows)
+                {
+                    id_jorbee = item.Field<int>("Column1").ToString();
+                }
+                string str_query = "exec sp_insertaUsuario " + id_jorbee + ", '" + nombre + "', '" + a_paterno + "', '" + a_materno + "', '" + genero + "', " + edad + ", " + rol + ", " + puesto + ", '" + correo + "', '" + contrasenia + "';";
                 consulta.fnAbrirConexion();
-                return consulta.fnEjecutarSentencia(str_query);
+                if (consulta.fnEjecutarSentencia(str_query))
+                {
+                    DataTable tbl_respuesta = consulta.fnConsultaSentencia("SELECT id_user FROM tbl_usuarios WHERE nombre = '" + nombre + "' AND apellido_uno = '" + a_paterno + "' AND apellido_dos = '" + a_materno + "' AND genero = '" + genero + "' AND correo = '" + correo + "'");
+                    foreach (DataRow item in tbl_respuesta.Rows)
+                    {
+                        object[] obj = item.ItemArray;
+                        consulta.fnInsertaIMagenBDD(Int32.Parse(obj[0].ToString()), path_imagen);
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {

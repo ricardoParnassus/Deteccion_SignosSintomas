@@ -47,5 +47,35 @@ namespace formularioDeteccionSignos_Form.classes
                 return dtbl_respuesta;
             }
         }
+
+        public bool fnInsertaDatosTransaccion(string id_user, string id_encuestador, string fecha, string fiebre, string tos, string malestar, string dolor, string dificultad, string ruta)
+        {
+            try
+            {
+                string str_query = "exec sp_insertaIncidenciaDeteccion " + id_user + ", " + id_encuestador + ", '" + fecha + "', " + fiebre + ", " + tos + ", " + malestar + ", " + dolor + ", " + dificultad + ", '" + ruta + "';";
+                conexionBD consulta = new conexionBD();
+                consulta.fnAbrirConexion();
+                return consulta.fnEjecutarSentencia(str_query);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool fnActualizaDatosTransaccion(string id_transaccion, string fiebre, string tos, string malestar, string dolor, string dificultad, string ruta)
+        {
+            try
+            {
+                string str_query = "exec sp_actualizaIncidenciaDeteccion " + id_transaccion + ", " + fiebre + ", " + tos + ", " + malestar + ", " + dolor + ", " + dificultad + ", '" + ruta + "';";
+                conexionBD consulta = new conexionBD();
+                consulta.fnAbrirConexion();
+                return consulta.fnEjecutarSentencia(str_query);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

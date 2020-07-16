@@ -191,11 +191,53 @@
     <Compile Include="resources\views\message.Designer.cs">
       <DependentUpon>message.cs</DependentUpon>
     </Compile>
+    <Compile Include="resources\views\ok_cancel_message.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\ok_cancel_message.Designer.cs">
+      <DependentUpon>ok_cancel_message.cs</DependentUpon>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\dificultadView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\dificultadView.Designer.cs">
+      <DependentUpon>dificultadView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\dolorCabezaView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\dolorCabezaView.Designer.cs">
+      <DependentUpon>dolorCabezaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\fiebreView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\fiebreView.Designer.cs">
+      <DependentUpon>fiebreView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\malestarView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\malestarView.Designer.cs">
+      <DependentUpon>malestarView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\tosEstornudosView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\sintomasViews\tosEstornudosView.Designer.cs">
+      <DependentUpon>tosEstornudosView.cs</DependentUpon>
+    </Compile>
     <Compile Include="resources\views\visorCamaraLuxand.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="resources\views\visorCamaraLuxand.Designer.cs">
       <DependentUpon>visorCamaraLuxand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="resources\views\visorScreenShot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="resources\views\visorScreenShot.Designer.cs">
+      <DependentUpon>visorScreenShot.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -240,8 +282,29 @@
     <EmbeddedResource Include="resources\views\message.resx">
       <DependentUpon>message.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\ok_cancel_message.resx">
+      <DependentUpon>ok_cancel_message.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\sintomasViews\dificultadView.resx">
+      <DependentUpon>dificultadView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\sintomasViews\dolorCabezaView.resx">
+      <DependentUpon>dolorCabezaView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\sintomasViews\fiebreView.resx">
+      <DependentUpon>fiebreView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\sintomasViews\malestarView.resx">
+      <DependentUpon>malestarView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\sintomasViews\tosEstornudosView.resx">
+      <DependentUpon>tosEstornudosView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="resources\views\visorCamaraLuxand.resx">
       <DependentUpon>visorCamaraLuxand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="resources\views\visorScreenShot.resx">
+      <DependentUpon>visorScreenShot.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -259,6 +322,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\images\add-user-112-908104.png" />
+    <Content Include="resources\images\arrow-sign-reload-icon-circle-button-vector-13928512.jpg" />
     <Content Include="resources\images\buscar.png" />
     <Content Include="resources\images\Camera_Moto_30013.png" />
     <Content Include="resources\images\descarga %281%29.png" />

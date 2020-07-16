@@ -45,6 +45,8 @@
             this.cmbbx_tipo_terminal = new System.Windows.Forms.ComboBox();
             this.cmbbx_marca_camara = new System.Windows.Forms.ComboBox();
             this.materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
+            this.cbx_tipo_visor = new System.Windows.Forms.ComboBox();
+            this.materialLabel8 = new MaterialSkin.Controls.MaterialLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +70,7 @@
             this.materialLabel2.Depth = 0;
             this.materialLabel2.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel2.Location = new System.Drawing.Point(24, 59);
+            this.materialLabel2.Location = new System.Drawing.Point(28, 59);
             this.materialLabel2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel2.Name = "materialLabel2";
             this.materialLabel2.Size = new System.Drawing.Size(92, 19);
@@ -81,7 +83,7 @@
             this.materialLabel3.Depth = 0;
             this.materialLabel3.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel3.Location = new System.Drawing.Point(24, 90);
+            this.materialLabel3.Location = new System.Drawing.Point(28, 93);
             this.materialLabel3.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel3.Name = "materialLabel3";
             this.materialLabel3.Size = new System.Drawing.Size(69, 19);
@@ -94,7 +96,7 @@
             this.materialLabel4.Depth = 0;
             this.materialLabel4.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel4.Location = new System.Drawing.Point(24, 122);
+            this.materialLabel4.Location = new System.Drawing.Point(28, 127);
             this.materialLabel4.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel4.Name = "materialLabel4";
             this.materialLabel4.Size = new System.Drawing.Size(75, 19);
@@ -107,7 +109,7 @@
             this.materialLabel5.Depth = 0;
             this.materialLabel5.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel5.Location = new System.Drawing.Point(24, 154);
+            this.materialLabel5.Location = new System.Drawing.Point(28, 162);
             this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel5.Name = "materialLabel5";
             this.materialLabel5.Size = new System.Drawing.Size(92, 19);
@@ -120,17 +122,17 @@
             this.materialLabel6.Depth = 0;
             this.materialLabel6.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel6.Location = new System.Drawing.Point(24, 184);
+            this.materialLabel6.Location = new System.Drawing.Point(28, 198);
             this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel6.Name = "materialLabel6";
-            this.materialLabel6.Size = new System.Drawing.Size(141, 19);
+            this.materialLabel6.Size = new System.Drawing.Size(145, 19);
             this.materialLabel6.TabIndex = 5;
-            this.materialLabel6.Text = "TIPO DE TERMINAL";
+            this.materialLabel6.Text = "TIPO DE TERMINAL:";
             // 
             // btn_guardar
             // 
             this.btn_guardar.Depth = 0;
-            this.btn_guardar.Location = new System.Drawing.Point(141, 395);
+            this.btn_guardar.Location = new System.Drawing.Point(138, 445);
             this.btn_guardar.MouseState = MaterialSkin.MouseState.HOVER;
             this.btn_guardar.Name = "btn_guardar";
             this.btn_guardar.Primary = true;
@@ -156,21 +158,21 @@
             // 
             // txt_puerto_camara
             // 
-            this.txt_puerto_camara.Location = new System.Drawing.Point(246, 89);
+            this.txt_puerto_camara.Location = new System.Drawing.Point(246, 92);
             this.txt_puerto_camara.Name = "txt_puerto_camara";
             this.txt_puerto_camara.Size = new System.Drawing.Size(220, 20);
             this.txt_puerto_camara.TabIndex = 9;
             // 
             // txt_usuario_cam
             // 
-            this.txt_usuario_cam.Location = new System.Drawing.Point(246, 121);
+            this.txt_usuario_cam.Location = new System.Drawing.Point(246, 126);
             this.txt_usuario_cam.Name = "txt_usuario_cam";
             this.txt_usuario_cam.Size = new System.Drawing.Size(220, 20);
             this.txt_usuario_cam.TabIndex = 10;
             // 
             // txt_password_cam
             // 
-            this.txt_password_cam.Location = new System.Drawing.Point(246, 153);
+            this.txt_password_cam.Location = new System.Drawing.Point(247, 161);
             this.txt_password_cam.Name = "txt_password_cam";
             this.txt_password_cam.Size = new System.Drawing.Size(220, 20);
             this.txt_password_cam.TabIndex = 11;
@@ -189,6 +191,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.materialLabel8);
+            this.groupBox2.Controls.Add(this.cbx_tipo_visor);
             this.groupBox2.Controls.Add(this.cmbbx_tipo_terminal);
             this.groupBox2.Controls.Add(this.cmbbx_marca_camara);
             this.groupBox2.Controls.Add(this.materialLabel7);
@@ -204,7 +208,7 @@
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(12, 166);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(486, 223);
+            this.groupBox2.Size = new System.Drawing.Size(486, 262);
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuraciones del sistema ";
@@ -212,7 +216,7 @@
             // cmbbx_tipo_terminal
             // 
             this.cmbbx_tipo_terminal.FormattingEnabled = true;
-            this.cmbbx_tipo_terminal.Location = new System.Drawing.Point(246, 181);
+            this.cmbbx_tipo_terminal.Location = new System.Drawing.Point(246, 196);
             this.cmbbx_tipo_terminal.Name = "cmbbx_tipo_terminal";
             this.cmbbx_tipo_terminal.Size = new System.Drawing.Size(220, 21);
             this.cmbbx_tipo_terminal.TabIndex = 15;
@@ -224,6 +228,7 @@
             this.cmbbx_marca_camara.Name = "cmbbx_marca_camara";
             this.cmbbx_marca_camara.Size = new System.Drawing.Size(220, 21);
             this.cmbbx_marca_camara.TabIndex = 14;
+            this.cmbbx_marca_camara.SelectedIndexChanged += new System.EventHandler(this.cmbbx_marca_camara_SelectedIndexChanged);
             // 
             // materialLabel7
             // 
@@ -231,18 +236,39 @@
             this.materialLabel7.Depth = 0;
             this.materialLabel7.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel7.Location = new System.Drawing.Point(24, 24);
+            this.materialLabel7.Location = new System.Drawing.Point(28, 26);
             this.materialLabel7.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel7.Name = "materialLabel7";
             this.materialLabel7.Size = new System.Drawing.Size(65, 19);
             this.materialLabel7.TabIndex = 13;
             this.materialLabel7.Text = "MARCA:";
             // 
+            // cbx_tipo_visor
+            // 
+            this.cbx_tipo_visor.FormattingEnabled = true;
+            this.cbx_tipo_visor.Location = new System.Drawing.Point(246, 231);
+            this.cbx_tipo_visor.Name = "cbx_tipo_visor";
+            this.cbx_tipo_visor.Size = new System.Drawing.Size(220, 21);
+            this.cbx_tipo_visor.TabIndex = 16;
+            // 
+            // materialLabel8
+            // 
+            this.materialLabel8.AutoSize = true;
+            this.materialLabel8.Depth = 0;
+            this.materialLabel8.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel8.Location = new System.Drawing.Point(28, 233);
+            this.materialLabel8.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel8.Name = "materialLabel8";
+            this.materialLabel8.Size = new System.Drawing.Size(114, 19);
+            this.materialLabel8.TabIndex = 17;
+            this.materialLabel8.Text = "TIPO DE VISOR:";
+            // 
             // catalogoParametrizacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 450);
+            this.ClientSize = new System.Drawing.Size(510, 503);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btn_guardar);
@@ -276,5 +302,7 @@
         private System.Windows.Forms.ComboBox cmbbx_marca_camara;
         private MaterialSkin.Controls.MaterialLabel materialLabel7;
         private System.Windows.Forms.ComboBox cmbbx_tipo_terminal;
+        private MaterialSkin.Controls.MaterialLabel materialLabel8;
+        private System.Windows.Forms.ComboBox cbx_tipo_visor;
     }
 }
